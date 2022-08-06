@@ -22,7 +22,7 @@ classdef demander
             recommPropty = recommPropty(maxIdx(1));
             nextPlaceMean = recommPropty.loc;
             nextPlaceStd = KsigmaD * abs(recommPropty.price) * sqrt(-2*log(obj.purchPower));
-            loc = random('norm', nextPlaceMean, nextPlaceStd);
+            loc = normrnd(nextPlaceMean, nextPlaceStd);
             loc(loc > 1) = 1;
             loc(loc < 0) = 0;
             obj.nextPlace = propty(loc, objFun, domain);

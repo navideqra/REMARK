@@ -1,4 +1,4 @@
-function [sol, val, m] = remark(options)
+function [x, val, valHist, m] = remark(options)
 m = market(options.objFun,...
     options.domain,...
     options.nDemander,...
@@ -11,10 +11,12 @@ m = market(options.objFun,...
     options.KnumS...
     );
 nIter = floor(options.nFeval/options.nDemander);
+valHist = zeros(nIter, 2);
 for iter = 1:nIter
     hist = [m.dmd.bestPlace];
     [maxValue, iimax] = max([hist.value]);
     fprintf('FEVAL\t%d\t|\tVALUE\t%d\t\n', iter*options.nDemander, maxValue)
+    valHist(iter, :) = [iter*options.nDemander, maxValue];
     if rem(iter, options.constrPer) == 0
         m = m.makeFrnd;
         m = m.supplierUpdate;
@@ -22,6 +24,6 @@ for iter = 1:nIter
     m = m.priceEval;
     m = m.demanderUpdate;
 end
-sol = denorm(hist(iimax).loc, options.domain);
+x = denorm(hist(iimax).loc, options.domain);
 val = maxValue;
 end
